@@ -6,11 +6,11 @@ import psycopg2
 ## Deixamos alguns campos para preenchimento de quem irá testar o código
 ## Basicamente, precisa rodar um servidor de DB(Banco de Dados) em postgress
 ## Uma sugestão seria subir um Container em Docker com a imagem do Postgres
-DATABASE_URL = "postgresql://seu_usuario:seu_senha@localhost:5432/seu_banco_de_dados"
+DATABASE_URL = "postgresql://your_user:your_pass@localhost:5432/your_db"
 prisma = Client()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
+app.config['SECRET_KEY'] = 'your_secret_key'
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -29,7 +29,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        user_data = prisma.usuario.find_first(where={"username": username, "password": "senha_incorreta"})
+        user_data = prisma.ufb.find_first(where={"username": username, "password": password})
         
         if user_data:
             user = User(user_data['id'])
@@ -47,7 +47,7 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    estoque_data = prisma.tabela_inexistente.find_many()
+    estoque_data = prisma.uft.find_many()
     return render_template('dashboard.html', estoque=estoque_data)
 
 if __name__ == '__main__':
